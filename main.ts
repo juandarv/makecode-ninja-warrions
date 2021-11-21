@@ -1,36 +1,35 @@
-controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
-    
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     shuriken = sprites.createProjectileFromSprite(img`
-            . . . . . . . . . . . . . . . .
-                    . . . . . . . . . . . . . . . .
-                    . . . . . . . . b . . . . . . .
-                    . . . . . . . b f b . . . . . .
-                    . . . . . . . c f c . . . . . .
-                    . . . . . . . c f c . . . . . .
-                    . . . . . . c d f d c . . . . .
-                    . . . b c c d f f f d c c b . .
-                    . . b f f f f f d f f f f f b .
-                    . . . b c c d f f f d c c b . .
-                    . . . . . . c d f d c . . . . .
-                    . . . . . . . c f c . . . . . .
-                    . . . . . . . c f c . . . . . .
-                    . . . . . . . b d b . . . . . .
-                    . . . . . . . . b . . . . . . .
-                    . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . b . . . . . . . 
+        . . . . . . . b f b . . . . . . 
+        . . . . . . . c f c . . . . . . 
+        . . . . . . . c f c . . . . . . 
+        . . . . . . c d f d c . . . . . 
+        . . . b c c d f f f d c c b . . 
+        . . b f f f f f d f f f f f b . 
+        . . . b c c d f f f d c c b . . 
+        . . . . . . c d f d c . . . . . 
+        . . . . . . . c f c . . . . . . 
+        . . . . . . . c f c . . . . . . 
+        . . . . . . . b d b . . . . . . 
+        . . . . . . . . b . . . . . . . 
+        . . . . . . . . . . . . . . . . 
         `, sombra, 100, 0)
 })
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function on_on_overlap(sprite: Sprite, otherSprite: Sprite) {
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
+    otherSprite2.destroy()
+    info.changeLifeBy(-1)
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     otherSprite.destroy()
     sprite.destroy(effects.fire, 100)
     info.changeScoreBy(10)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function on_on_overlap2(sprite2: Sprite, otherSprite2: Sprite) {
-    otherSprite2.destroy()
-    info.changeLifeBy(-1)
-})
-let enemigo_murcielago : Sprite = null
-let shuriken : Sprite = null
-let sombra : Sprite = null
+let enemigo_murcielago: Sprite = null
+let shuriken: Sprite = null
+let sombra: Sprite = null
 info.setScore(0)
 sombra = sprites.create(img`
     ........................
@@ -57,7 +56,7 @@ sombra = sprites.create(img`
     ........................
     ........................
     ........................
-`, SpriteKind.Player)
+    `, SpriteKind.Player)
 scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     9999999999999999999999999999999999999999999999999999111111111119999999999999999999999999999999999999991111999999999999999999999999999999999999999999111111111111
@@ -179,37 +178,35 @@ scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbcccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-`)
+    `)
 sombra.setFlag(SpriteFlag.StayInScreen, true)
 info.setLife(3)
 controller.moveSprite(sombra)
-game.onUpdateInterval(2000, function on_update_interval() {
-    
+game.onUpdateInterval(2000, function () {
     enemigo_murcielago = sprites.create(img`
-        . . f f f . . . . . . . . f f f
-        . f f c c . . . . . . f c b b c
-        f f c c . . . . . . f c b b c .
-        f c f c . . . . . . f b c c c .
-        f f f c c . c c . f c b b c c .
-        f f c 3 c c 3 c c f b c b b c .
-        f f b 3 b c 3 b c f b c c b c .
-        . c b b b b b b c b b c c c . .
-        . c 1 b b b 1 b b c c c c . . .
-        c b b b b b b b b b c c . . . .
-        c b c b b b c b b b b f . . . .
-        f b 1 f f f 1 b b b b f c . . .
-        f b b b b b b b b b b f c c . .
-        . f b b b b b b b b c f . . . .
-        . . f b b b b b b c f . . . . .
-        . . . f f f f f f f . . . . . .
-    `, SpriteKind.Enemy)
+        . . f f f . . . . . . . . f f f 
+        . f f c c . . . . . . f c b b c 
+        f f c c . . . . . . f c b b c . 
+        f c f c . . . . . . f b c c c . 
+        f f f c c . c c . f c b b c c . 
+        f f c 3 c c 3 c c f b c b b c . 
+        f f b 3 b c 3 b c f b c c b c . 
+        . c b b b b b b c b b c c c . . 
+        . c 1 b b b 1 b b c c c c . . . 
+        c b b b b b b b b b c c . . . . 
+        c b c b b b c b b b b f . . . . 
+        f b 1 f f f 1 b b b b f c . . . 
+        f b b b b b b b b b b f c c . . 
+        . f b b b b b b b b c f . . . . 
+        . . f b b b b b b c f . . . . . 
+        . . . f f f f f f f . . . . . . 
+        `, SpriteKind.Enemy)
     enemigo_murcielago.setFlag(SpriteFlag.StayInScreen, false)
     enemigo_murcielago.setVelocity(-100, 0)
     enemigo_murcielago.setPosition(153, randint(120, 0))
 })
-forever(function on_forever() {
+forever(function () {
     if (info.score() == 100) {
         game.over(true)
     }
-    
 })
