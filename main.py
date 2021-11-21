@@ -1,6 +1,6 @@
-controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
-    
-    shuriken = sprites.createProjectileFromSprite(img`
+def on_a_pressed():
+    global shuriken
+    shuriken = sprites.create_projectile_from_sprite(img("""
             . . . . . . . . . . . . . . . .
                     . . . . . . . . . . . . . . . .
                     . . . . . . . . b . . . . . . .
@@ -17,22 +17,28 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
                     . . . . . . . b d b . . . . . .
                     . . . . . . . . b . . . . . . .
                     . . . . . . . . . . . . . . . .
-        `, sombra, 100, 0)
-})
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function on_on_overlap(sprite: Sprite, otherSprite: Sprite) {
+        """),
+        sombra,
+        100,
+        0)
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+
+def on_on_overlap(sprite, otherSprite):
     otherSprite.destroy()
     sprite.destroy(effects.fire, 100)
-    info.changeScoreBy(10)
-})
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function on_on_overlap2(sprite2: Sprite, otherSprite2: Sprite) {
+    info.change_score_by(10)
+sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap)
+
+def on_on_overlap2(sprite2, otherSprite2):
     otherSprite2.destroy()
-    info.changeLifeBy(-1)
-})
-let enemigo_murcielago : Sprite = null
-let shuriken : Sprite = null
-let sombra : Sprite = null
-info.setScore(0)
-sombra = sprites.create(img`
+    info.change_life_by(-1)
+sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
+
+enemigo_murcielago: Sprite = None
+shuriken: Sprite = None
+sombra: Sprite = None
+info.set_score(0)
+sombra = sprites.create(img("""
     ........................
     ....ffffff..............
     ..fffffffff.............
@@ -57,8 +63,9 @@ sombra = sprites.create(img`
     ........................
     ........................
     ........................
-`, SpriteKind.Player)
-scene.setBackgroundImage(img`
+"""),
+    SpriteKind.player)
+scene.set_background_image(img("""
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     9999999999999999999999999999999999999999999999999999111111111119999999999999999999999999999999999999991111999999999999999999999999999999999999999999111111111111
     99999999999999999999999999999999999999999999999999991ddddddddd19999999999999999999999999991111199999991dd11999999999999999999999999999999999999999991dddddddddd1
@@ -179,13 +186,14 @@ scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbcccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-`)
-sombra.setFlag(SpriteFlag.StayInScreen, true)
-info.setLife(3)
-controller.moveSprite(sombra)
-game.onUpdateInterval(2000, function on_update_interval() {
-    
-    enemigo_murcielago = sprites.create(img`
+"""))
+sombra.set_flag(SpriteFlag.STAY_IN_SCREEN, True)
+info.set_life(3)
+controller.move_sprite(sombra)
+
+def on_update_interval():
+    global enemigo_murcielago
+    enemigo_murcielago = sprites.create(img("""
         . . f f f . . . . . . . . f f f
         . f f c c . . . . . . f c b b c
         f f c c . . . . . . f c b b c .
@@ -202,14 +210,14 @@ game.onUpdateInterval(2000, function on_update_interval() {
         . f b b b b b b b b c f . . . .
         . . f b b b b b b c f . . . . .
         . . . f f f f f f f . . . . . .
-    `, SpriteKind.Enemy)
-    enemigo_murcielago.setFlag(SpriteFlag.StayInScreen, false)
-    enemigo_murcielago.setVelocity(-100, 0)
-    enemigo_murcielago.setPosition(153, randint(120, 0))
-})
-forever(function on_forever() {
-    if (info.score() == 100) {
-        game.over(true)
-    }
-    
-})
+    """),
+        SpriteKind.enemy)
+    enemigo_murcielago.set_flag(SpriteFlag.STAY_IN_SCREEN, False)
+    enemigo_murcielago.set_velocity(-100, 0)
+    enemigo_murcielago.set_position(153, randint(120, 0))
+game.on_update_interval(2000, on_update_interval)
+
+def on_forever():
+    if info.score() == 100:
+        game.over(True)
+forever(on_forever)
